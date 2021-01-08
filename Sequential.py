@@ -14,11 +14,10 @@ class Sequential:
         return x
 
     def backward(self, pred, y):
-        grdW = pred-y
-        grdH = pred-y
-        grdB = pred-y
+        grdW = .5*(pred-y)**2
+        grdH = .5*(pred-y)**2
         for i in reversed(range(len(self.layers))):
-            grdW, grdH, grdB = self.layers[i].backward(grdW, grdH, grdB)
+            grdW, grdH = self.layers[i].backward(grdW, grdH)
 
     def step(self):
         for i in reversed(range(len(self.layers))):

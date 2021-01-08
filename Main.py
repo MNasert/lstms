@@ -3,30 +3,20 @@ from lstms.Sequential import Sequential
 from lstms.Functional import TanH
 import numpy as np
 testnet = Sequential([
-    RNNcell(2, 10),
+    RNNcell(2, 10, bias=False),
     TanH(),
-    RNNcell(10, 10),
-    TanH(),
-    RNNcell(10, 1),
+    RNNcell(10, 1, bias=False),
     TanH()
-], lr=1e-4)
-targnet = Sequential([
-    RNNcell(2, 10),
-    TanH(),
-    RNNcell(10, 10),
-    TanH(),
-    RNNcell(10, 1),
-    TanH()
-], lr=1e-4)
+], lr=1e-2)
 
-setsize = 10
-x = [np.random.rand(2, 1) for i in range(setsize)]
-y = [targnet.forward(x)]
+x = np.array([[[.1], [.2]], [[.2], [.3]], [[.3], [.4]]])
+y = np.array([[.3], [.4], [.5]])
 
-for j in range(20000):
+for j in range(150):
     c = None
     for i in range(len(x)):
         pred = testnet.forward(x[i])
+        print("pred:", pred, "\ny:", y[i], "\nx:", x[i])
         testnet.backward(pred, y[i])
         testnet.step()
 

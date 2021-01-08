@@ -7,11 +7,10 @@ class TanH:
     def forward(self, x, hdn=None):
         return np.tanh(x), np.tanh(hdn) if hdn is not None else None
 
-    def backward(self, grdW, grdH, grdB):
-        grdW = 1-grdW**2
-        grdH = 1-grdH**2
-        grdB = 1-grdB**2
-        return grdW, grdH, grdB
+    def backward(self, grdW, grdH):
+        grdW = np.sinh(grdW)**2
+        grdH = np.sinh(grdH)**2
+        return grdW, grdH
 
     def step(self):
         pass
