@@ -10,13 +10,13 @@ import numpy as np
 import sys as sys
 sys.setrecursionlimit(9999)
 model = Sequential([
-    RNNcell(2,2, recurrencies=4),
+    LSTMCell(2,2, recurrencies=4),
     ], criterion=Crits.MSELoss(), bias=True, lr=5e-3)
 #TODO implement Linear layer -> _any_Cell(iptsize, _any_size) on Linear(_any_size, outsize)
 x = np.array([[[.1], [.2]], [[.2], [.3]], [[.3], [.4]]])
 y = np.array([x[1], x[2], [[.5], [.6]]])
 
-for j in range(5):
+for j in range(15):
     c = None
     pred = None
     for i in range(len(x)):
