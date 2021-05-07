@@ -1,43 +1,41 @@
 import numpy as np
-#TODO Linear class
-class TanH:
-    def __init__(self):
-        super(TanH, self).__init__()
-        self.y = None
-        self.hdn = None
-    def forward(self, x, hdn=None):
-        return np.tanh(x), np.tanh(hdn) if hdn is not None else None
 
-    def backward(self, grdW, grdH):
-        grdW = np.sinh(grdW)**2
-        grdH = np.sinh(grdH)**2
-        return grdW, grdH
-
-    def step(self):
-        pass
 
 class Sigmoid:
     def __init__(self):
         super(Sigmoid, self).__init__()
         self.ipt_prev = None
-    def forward(self, x, hdn=None):
-        """
-        :param x: input parameter
-        :param hdn: (optional) hidden parameter
-        :return: sigma(x)
-            :math:
-                1/(e^-x)
-            :math:
-        """
-        self.y, self.hdn = 1/(1+np.exp(-x)), 1/(1+np.exp(-hdn))
-        return self.y, self.hdn
 
-    def backward(self, grdW, grdH):
-        grdW = grdW*(self.y*(np.ones(self.y.shape)-self.y))
-        grdH = grdH*(self.hdn*(np.ones(self.hdn.shape)-self.hdn))
-        return grdW, grdH
+    def forward(self, x):
+        self.ipt_prev = x
+        return 1 / (1 + np.exp(-x))
 
-    def step(self):
-        pass
+    def backward(self, grd_in):
+        grd_out = self.forward(grd_in) * (1-self.forward(grd_in))
+        return grd_out
 
+class TanH:
+    def __init__(self):
+        super(TanH, self).__init__()
+        self.ipt_prev = None
 
+    def forward(self, x):
+        self.ipt_prev = x
+        return np.tanh(x)
+
+    def backward(self, grd_in):
+        grd_out = 1 - self.forward(grd_in)**2
+        return grd_out
+
+class ReLU:
+    def __init__(self):
+        super(ReLU, self).__init__()
+        self.ipt_prev = None
+
+    def forward(self, x):
+        self.ipt_prev = x
+        return x * (x > 0)
+
+    def backward(self, grd_in):
+        grd_out = 1. * (grd_in > 0)
+        return grd_out
